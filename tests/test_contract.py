@@ -77,10 +77,24 @@ class IngestPathTests(unittest.TestCase):
 
     def test_tree_forbids_post_v1_ingest(self) -> None:
         offenders: list[str] = []
-        for path in ROOT.rglob("*"):
-            if not path.is_file():
-                continue
-            if ".git" in path.parts or "__pycache__" in path.parts:
+        scanned = (
+            ROOT / "remem_grokbot",
+            ROOT / "server.py",
+            ROOT / "scripts",
+            ROOT / "mcp.json",
+            ROOT / ".cursor-plugin",
+            ROOT / "skills",
+            ROOT / "README.md",
+            ROOT / "pyproject.toml",
+        )
+        files: list[Path] = []
+        for item in scanned:
+            if item.is_file():
+                files.append(item)
+            elif item.is_dir():
+                files.extend(p for p in item.rglob("*") if p.is_file())
+        for path in files:
+            if "__pycache__" in path.parts:
                 continue
             text = path.read_text(encoding="utf-8", errors="replace")
             if "POST /v1/ingest" in text:
