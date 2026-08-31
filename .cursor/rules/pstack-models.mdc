@@ -1,0 +1,56 @@
+---
+description: Detected Cloud Agent Task model slugs for this VM. Do not invent launch ids.
+alwaysApply: true
+---
+
+# pstack Task catalog (detected 2026-08-31T21:23:21Z)
+
+This file lists slugs the Task/subagent tool **actually accepted** on this Cloud Agent VM. It does not invent launch ids.
+
+## FAIL LOUD
+
+Requested Feature launch ids are **not spawnable** here:
+
+- `grok-4.6` (writer/code) — Task rejected: `Invalid model selection "grok-4.6". Model could not be resolved to a valid subagent model.`
+- `gpt-5.6-sol` (tight recipe / verifier) — Task rejected: `Invalid model selection "gpt-5.6-sol". Model could not be resolved to a valid subagent model.`
+- `claude-fable-5` (judgment) — not in the allowed list (not attempted after writer/verifier fail)
+
+Do **not** map Feature writer to `grok-4.6` or verifier to `gpt-5.6-sol` on this VM. Those strings are not in the Task catalog.
+
+Do **not** pass `grok-4.6-fast-xhigh`. That slug is also absent from the catalog below.
+
+Parent Grok (`cursor-grok-4.6-high-fast`) did not write `PIPELINE-PROOF.md`.
+
+Remem key was not used.
+
+## Allowed Task `model` slugs (verbatim from Task reject payload)
+
+- `claude-fable-5-thinking-high`
+- `claude-fable-5-thinking-xhigh`
+- `claude-opus-5-thinking-high`
+- `claude-opus-5-thinking-high-fast`
+- `claude-sonnet-5-thinking-high`
+- `claude-sonnet-5-thinking-xhigh`
+- `composer-2.5`
+- `composer-2.5-fast`
+- `cursor-grok-4.5-high`
+- `cursor-grok-4.5-high-fast`
+- `cursor-grok-4.6-high-fast`
+- `gemini-3.7-flash-high`
+- `gpt-5.6-luna-high`
+- `gpt-5.6-sol-high`
+- `gpt-5.6-sol-high-fast`
+- `gpt-5.6-sol-xhigh`
+- `gpt-5.6-sol-xhigh-fast`
+
+`inherit` is documented on the Task tool as optional default (same model as parent). It was not in the reject payload list.
+
+## Role mapping on this VM
+
+Requested launch ids are missing, so Feature roles are **unmapped**:
+
+- feature / writer: **unset** (`grok-4.6` not in catalog)
+- tight-recipe / verifier: **unset** (`gpt-5.6-sol` not in catalog)
+- judgment: **unset** (`claude-fable-5` not in catalog)
+
+Do not substitute concatenated effort slugs (`cursor-grok-4.6-high-fast`, `gpt-5.6-sol-high`, `claude-fable-5-thinking-high`) for those launch ids unless a later catalog add makes the launch ids resolve.
