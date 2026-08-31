@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "remem": {
+      "command": "python3",
+      "args": ["${PLUGIN_ROOT}/server.py"],
+      "env": {
+        "REMEM_API_KEY": "${REMEM_API_KEY}",
+        "REMEM_API_URL": "${REMEM_API_URL}",
+        "REMEM_DEFAULT_NAMESPACE": "${REMEM_DEFAULT_NAMESPACE}"
+      }
+    }
+  }
+}

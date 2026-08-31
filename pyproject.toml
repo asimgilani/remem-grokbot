@@ -1,0 +1,20 @@
+[project]
+name = "remem-grokbot"
+version = "1.0.0"
+description = "Grok Bot Remem plugin. Ten remem_* MCP tools over stdio against https://api.remem.io."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp==1.26.0",
+    "httpx==0.28.1",
+]
+
+[project.scripts]
+remem-grokbot = "remem_grokbot.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["remem_grokbot"]
