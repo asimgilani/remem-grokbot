@@ -1,0 +1,51 @@
+{
+  "name": "remem-grokbot",
+  "displayName": "Remem for Grok Bot",
+  "version": "1.0.0",
+  "description": "Cursor / Grok Bot Remem connector. Ten house MCP tools over stdio python3 against https://api.remem.io. Writes stay in namespace grokbot.",
+  "author": {
+    "name": "Asim Gilani"
+  },
+  "homepage": "https://github.com/asimgilani/remem-grokbot",
+  "repository": "https://github.com/asimgilani/remem-grokbot",
+  "license": "MIT",
+  "keywords": [
+    "remem",
+    "mcp",
+    "grok-bot",
+    "memory",
+    "context"
+  ],
+  "category": "developer-tools",
+  "tags": [
+    "remem",
+    "mcp",
+    "memory"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "REMEM_API_KEY": {
+        "type": "string",
+        "title": "Remem API key",
+        "description": "Remem data-plane API key (vlt_...). Plugin setup secret. Never commit this value.",
+        "secret": true
+      },
+      "REMEM_API_URL": {
+        "type": "string",
+        "title": "Remem API URL",
+        "description": "Remem API base URL.",
+        "default": "https://api.remem.io"
+      },
+      "REMEM_DEFAULT_NAMESPACE": {
+        "type": "string",
+        "title": "Default write namespace",
+        "description": "Forced write namespace. Must not be default. Connector injects grokbot when unset.",
+        "default": "grokbot"
+      }
+    },
+    "required": ["REMEM_API_KEY"]
+  }
+}
