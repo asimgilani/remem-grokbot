@@ -405,6 +405,15 @@ async def _drive_after_ingest(
     return await _drive_one(session, calls, name, arguments)
 
 
+async def _drive_query(session: Any, calls: list[dict[str, Any]]) -> tuple[bool, int]:
+    _ingest_text, err = await _call_tool(
+        session, calls, "remem_ingest", _ingest_arguments("remem_query")
+    )
+    if err is not None:
+        return False, err
+    return await _drive_one(session, calls, "remem_query", SIMPLE_RECIPES["remem_query"])
+
+
 async def _drive_entity_facts(session: Any, calls: list[dict[str, Any]]) -> tuple[bool, int]:
     listed, err = await _call_tool(session, calls, "remem_list_entities", {"limit": 5})
     if err is not None:
@@ -417,6 +426,8 @@ async def _drive_entity_facts(session: Any, calls: list[dict[str, Any]]) -> tupl
 
 
 async def _drive_feature(session: Any, feature: str, calls: list[dict[str, Any]]) -> tuple[bool, int]:
+    if feature == "remem_query":
+        return await _drive_query(session, calls)
     if feature in SIMPLE_RECIPES:
         return await _drive_one(session, calls, feature, SIMPLE_RECIPES[feature])
     if feature == "remem_ingest":
