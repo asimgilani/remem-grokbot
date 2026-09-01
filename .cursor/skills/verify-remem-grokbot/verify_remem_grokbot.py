@@ -97,7 +97,11 @@ def _redact(value: object) -> object:
         for key, item in value.items():
             lowered = str(key).lower()
             if "key" in lowered and "idempotency" not in lowered:
-                out[key] = "<redacted>"
+                # Boolean presence flags must stay booleans. Never print the key.
+                if isinstance(item, bool):
+                    out[key] = item
+                else:
+                    out[key] = "<redacted>"
             else:
                 out[key] = _redact(item)
         return out

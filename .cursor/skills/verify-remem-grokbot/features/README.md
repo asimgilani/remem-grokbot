@@ -10,7 +10,7 @@ Behavior-level inventory of the Grok Bot Remem plugin (`remem-grokbot`) stdio MC
 - `python3 .cursor/skills/verify-remem-grokbot/verify_remem_grokbot.py doctor` exited 0: process up, exactly the ten tool names below, `GET https://api.remem.io/health` is HTTP 200, `remem_api_key_present` is true.
 - `REMEM_API_KEY` is already in the process environment. Do not paste a key. Do not print, log, or commit a key. Do not ask anyone to paste a key.
 - There is no long-lived HTTP server to own. Each helper command opens its own stdio session and closes it.
-- Writes use `grokbot` only (or `REMEM_DEFAULT_NAMESPACE` when set and not `default`). Never write `default`.
+- This harness writes `grokbot` only. Never write `default`. Do not set `REMEM_DEFAULT_NAMESPACE` for a verification run.
 - Omitted reads become `["default", "grokbot"]`. Never inject `["*"]`.
 - Document and entity ids are canonical UUIDs.
 

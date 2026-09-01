@@ -54,7 +54,7 @@ Drive the way a Grok Bot user does: MCP `session.call_tool` on a fresh stdio chi
 python3 .cursor/skills/verify-remem-grokbot/verify_remem_grokbot.py drive remem_query
 ```
 
-Replace `remem_query` with any of the ten tool names. The helper opens a **new** stdio session, `initialize`, then `call_tool` with the recipe in the matching [features/](features/) file. Writes always use namespace `grokbot` (or `REMEM_DEFAULT_NAMESPACE` when that env is set and is not `default`). Never write `default`. Omitted reads become `["default", "grokbot"]`. Never inject `["*"]`. Document and entity ids must be canonical UUIDs. `remem_ingest` sends `namespace` `grokbot` and `return_id` true. `remem_summarize` passes `question`. `remem_query` and `remem_search` use a clearly labeled verification probe string.
+Replace `remem_query` with any of the ten tool names. The helper opens a **new** stdio session, `initialize`, then `call_tool` with the recipe in the matching [features/](features/) file. This harness writes namespace `grokbot` only. Never write `default`. Do not set `REMEM_DEFAULT_NAMESPACE` for a verification run. Omitted reads become `["default", "grokbot"]`. Never inject `["*"]`. Document and entity ids must be canonical UUIDs. `remem_ingest` sends `namespace` `grokbot` and `return_id` true. `remem_summarize` passes `question`. `remem_query` and `remem_search` use a clearly labeled verification probe string.
 
 If `REMEM_API_KEY` is unset: FAIL LOUD (same rules as Doctor) and do not invent a 2xx. If tool text starts with `HTTP ` or `Error:`: fail. If the result shows the classifier leftover (`extracted` is null and/or `classifier_model` unavailable): FAIL LOUD, do not claim ASI-9 Done, do not loop `remem_extract_facts` as a completion gate.
 
