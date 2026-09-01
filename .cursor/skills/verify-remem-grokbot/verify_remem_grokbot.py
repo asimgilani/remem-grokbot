@@ -52,6 +52,7 @@ UUID_RE = re.compile(
 SIMPLE_RECIPES: dict[str, dict[str, Any]] = {
     "remem_query": {
         "query": "verify-remem-grokbot remem_query verification probe",
+        "namespaces": ["grokbot"],
     },
     "remem_search": {
         "query": "verify-remem-grokbot remem_search verification probe",
