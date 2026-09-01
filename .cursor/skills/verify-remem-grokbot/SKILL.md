@@ -54,9 +54,9 @@ Drive the way a Grok Bot user does: MCP `session.call_tool` on a fresh stdio chi
 python3 .cursor/skills/verify-remem-grokbot/verify_remem_grokbot.py drive remem_query
 ```
 
-Replace `remem_query` with any of the ten tool names. The helper opens a **new** stdio session, `initialize`, then `call_tool` with the recipe in the matching [features/](features/) file. This harness writes namespace `grokbot` only. Never write `default`. Do not set `REMEM_DEFAULT_NAMESPACE` for a verification run. Omitted reads become `["default", "grokbot"]`. Never inject `["*"]`. Document and entity ids must be canonical UUIDs. `remem_ingest` sends `namespace` `grokbot` and `return_id` true. `remem_summarize` passes `question`. `remem_query` and `remem_search` use a clearly labeled verification probe string.
+Replace `remem_query` with any of the ten tool names. The helper opens a **new** stdio session, `initialize`, then `call_tool` with the recipe in the matching [features/](features/) file. This harness writes namespace `grokbot` only for ingest/product-policy writes (Grok Bot installs). Rec B cloud live `remem_query` recipe passes `namespaces: ["testing"]`. Grok Bot house writes `grokbot`; this Cloud Agents test key reads/writes `testing`. Never write `default`. Do not set `REMEM_DEFAULT_NAMESPACE` for a verification run. Omitted reads become `["default", "grokbot"]` and this test key cannot use those — do not fall back to grokbot or default. Never inject `["*"]`. Document and entity ids must be canonical UUIDs. `remem_ingest` sends `namespace` `grokbot` and `return_id` true. `remem_summarize` passes `question`. `remem_query` Rec B and `remem_search` use a clearly labeled verification probe string.
 
-If `REMEM_API_KEY` is unset: FAIL LOUD (same rules as Doctor) and do not invent a 2xx. If tool text starts with `HTTP ` or `Error:`: fail. If the result shows the classifier leftover (`extracted` is null and/or `classifier_model` unavailable): FAIL LOUD, do not claim ASI-9 Done, do not loop `remem_extract_facts` as a completion gate.
+If `REMEM_API_KEY` is unset: FAIL LOUD (same rules as Doctor) and do not invent a 2xx. If tool text starts with `HTTP ` or `Error:`: FAIL LOUD with the HTTP line (first line / body prefix). Do not invent a 2xx. Do not loop. Do not POST `/v1/namespaces`. Do not fall back to grokbot or default. If the result shows the classifier leftover (`extracted` is null and/or `classifier_model` unavailable): FAIL LOUD, do not claim ASI-9 Done, do not loop `remem_extract_facts` as a completion gate.
 
 Use the Feature Map. A proof that drives one convenient tool is incomplete when the change touches others listed there. Live recipes in this tree: `remem_query`, `remem_ingest`, `remem_get_document`, `remem_search`, `remem_summarize`. The other five files are stubs this run may not drive live.
 
@@ -72,7 +72,7 @@ Proof standards:
 
 - Exercise the real user path: `session.call_tool` over stdio for a real `remem_*` tool. Internal `dispatch_tool` does not count.
 - Capture the **action** and the **resulting tool JSON/text**, not only an exit code.
-- Writes land in `grokbot` only. Confirm namespace in the ingest/extract arguments and in any returned write fields.
+- Writes land in `grokbot` only (ingest/product-policy). Confirm namespace in the ingest/extract arguments and in any returned write fields. Rec B `remem_query` is a read of `testing` only.
 - Side effects: a successful `remem_ingest` returns parseable JSON with a `job_id` (and a document UUID when `return_id` is true). A successful query/search/summarize returns a body that does not start with `HTTP ` or `Error:`. Empty Remem results can still be a live pass.
 - Redact before writing anything: keys whose names contain `key` (except `idempotency`) become `"<redacted>"`; strings starting with `vlt_` become `"vlt_<redacted>"`. Never write `REMEM_API_KEY` material. Doctor's key field is a boolean only.
 - Mocks do not count for live Remem. Shape tests under `tests/` are not a live pass.

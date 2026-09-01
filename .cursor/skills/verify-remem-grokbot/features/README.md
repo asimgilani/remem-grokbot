@@ -10,7 +10,8 @@ Behavior-level inventory of the Grok Bot Remem plugin (`remem-grokbot`) stdio MC
 - `python3 .cursor/skills/verify-remem-grokbot/verify_remem_grokbot.py doctor` exited 0: process up, exactly the ten tool names below, `GET https://api.remem.io/health` is HTTP 200, `remem_api_key_present` is true.
 - `REMEM_API_KEY` is already in the process environment. Do not paste a key. Do not print, log, or commit a key. Do not ask anyone to paste a key.
 - There is no long-lived HTTP server to own. Each helper command opens its own stdio session and closes it.
-- This harness writes `grokbot` only. Never write `default`. Do not set `REMEM_DEFAULT_NAMESPACE` for a verification run.
+- This harness writes `grokbot` only for ingest/product-policy recipes. Never write `default`. Do not set `REMEM_DEFAULT_NAMESPACE` for a verification run.
+- Rec B `remem_query` is a read-only live drive that passes `namespaces: ["testing"]`. Grok Bot house writes `grokbot`; this Cloud Agents test key reads/writes `testing`. Do not fall back to grokbot or default. Do not POST `/v1/namespaces`.
 - Omitted reads become `["default", "grokbot"]`. Never inject `["*"]`.
 - Document and entity ids are canonical UUIDs.
 
@@ -22,7 +23,7 @@ Behavior-level inventory of the Grok Bot Remem plugin (`remem-grokbot`) stdio MC
 - Never start Playwright, CDP, Electron, or a browser. This surface is stdio MCP.
 - `remem_ingest` always includes `namespace` `grokbot` and `return_id` true.
 - `remem_summarize` always passes `question` (not `query`).
-- `remem_query` and `remem_search` always use a clearly labeled verification probe string.
+- `remem_query` Rec B live recipe passes `namespaces: ["testing"]` and a clearly labeled verification probe string. `remem_search` uses a clearly labeled verification probe string.
 - GET namespace params on the wire are comma-separated (`default,grokbot` when omitted). POST bodies use a JSON array.
 - Do not treat `scripts/prove_live.py` as a feature recipe. It is a payload/redaction lever only.
 - Restore nothing in Remem (probe documents titled with `verify-remem-grokbot` are safe to leave). Do not delete proof artifacts during cleanup.
@@ -53,7 +54,7 @@ Each file starts with an H1 and one paragraph describing the tool. `Driving it w
 
 Live recipes (full preconditions and helper bullets):
 
-- [remem_query](remem_query.md): raw JSON from `POST /v1/query`.
+- [remem_query](remem_query.md): raw JSON from `POST /v1/query`. Rec B live recipe reads `testing` only.
 - [remem_search](remem_search.md): formatted fast search (`POST /v1/query` `mode=fast`, not `GET /v1/search`).
 - [remem_summarize](remem_summarize.md): rich synthesis; argument is `question`.
 - [remem_get_document](remem_get_document.md): fetch one document by canonical UUID.

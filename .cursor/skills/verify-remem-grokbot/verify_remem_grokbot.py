@@ -52,7 +52,7 @@ UUID_RE = re.compile(
 SIMPLE_RECIPES: dict[str, dict[str, Any]] = {
     "remem_query": {
         "query": "verify-remem-grokbot remem_query verification probe",
-        "namespaces": ["grokbot"],
+        "namespaces": ["testing"],
     },
     "remem_search": {
         "query": "verify-remem-grokbot remem_search verification probe",
@@ -340,7 +340,11 @@ async def _call_tool(
     text = _result_text(result)
     calls.append({"tool": name, "arguments": arguments, "result_text": text})
     if text.startswith("HTTP ") or text.startswith("Error:"):
-        print(f"FAIL: {name} text starts with HTTP or Error:. Live 2xx was not proven.")
+        first_line = text.splitlines()[0] if text else text
+        print(
+            f"FAIL LOUD: {name} text starts with HTTP or Error:. Live 2xx was not proven."
+        )
+        print(str(_redact(first_line)))
         return text, 2
     parsed: object | None
     try:
