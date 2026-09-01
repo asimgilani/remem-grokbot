@@ -23,8 +23,8 @@ Preconditions:
 - The query itself is a read of `grokbot` only. The helper may ingest a `grokbot` probe first so that namespace exists. It must not write `default` and must not inject `["*"]`.
 
 - **Ask Remem.** From the repo root, run `python3 .cursor/skills/verify-remem-grokbot/verify_remem_grokbot.py drive remem_query`. The helper opens a fresh stdio session, `session.initialize()`, may `session.call_tool("remem_ingest", …)` with `namespace` `grokbot` and `return_id` true, then `session.call_tool("remem_query", {"query": "verify-remem-grokbot remem_query verification probe", "namespaces": ["grokbot"]})`.
-- **Observe the tool JSON.** `/tmp/verify-remem-grokbot-evidence/drive-remem_query.json` (and `.txt`) exist. Result text is Remem query JSON, does not start with `HTTP ` or `Error:`, and is redacted. Empty `results` is still a live pass.
-- **Confirm the path.** The action was `session.call_tool`. The helper did not call `dispatch_tool`.
+- **Observe the tool JSON.** `/tmp/verify-remem-grokbot-evidence/drive-remem_query.json` (and `.txt`) exist. The remem_query result text is Remem query JSON, does not start with `HTTP ` or `Error:`, and is redacted. Empty `results` is still a live pass.
+- **Confirm the path.** Both actions were `session.call_tool`. The ingest write used `grokbot` only. The helper did not call `dispatch_tool`.
 
 ## Gotchas
 
